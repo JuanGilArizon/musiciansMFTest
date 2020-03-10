@@ -1,32 +1,25 @@
-import React, { useEffect } from 'react';
-import {connect} from 'react-redux';
-import {testAction} from './store/musicians/action-creator';
-
+import React from 'react';
+import { BrowserRouter, Route} from "react-router-dom";
+import Musicians from './components/Musicians'
 class RootReduxed extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { };
-  }
+  state = {
+    hasError: false
+  };
 
-  componentDidMount() {
-      const { onTestAction } = this.props;
-      onTestAction();
+  componentDidCatch(error, info) {
+    this.setState({ hasError: true });
   }
 
   render() {
-    const {name, testActionValue} = this.props
-    return (
-      <section>{name} is mounted!, and the redux state is {testActionValue}</section>
-    )
+    return this.state.hasError ? (
+      <div>Error</div>
+    ) : (
+      <BrowserRouter>
+        <Route path="/musicians" component={Musicians} />
+      </BrowserRouter>
+    );
   }
 }
-const mapStateToProps = (state) => ({
-  testActionValue : state.musicians.testVar
-})
-const mapDispatchToProps = (dispatch) => ({
-  onTestAction : () => {
-    dispatch(testAction());
-  }
-})
-export default connect(mapStateToProps, mapDispatchToProps)(RootReduxed);
+
+export default RootReduxed;
